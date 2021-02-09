@@ -34,7 +34,7 @@ def check():
 	global s
 	if host != "":
 		s = socket.socket()
-		s.connect((host, 1234))
+		s.connect((host, 1094))
 		connected = True
 		RPC.update(large_image="logo", large_text="PURPLE",
 				state="Multyplayer",
@@ -237,15 +237,15 @@ def multyplayer():
 	global RPC
 	
 	if key != "-":
-		d = {"name":name, "key":key}
+		d = {"name":name, "key":key, "character":character}
 	else:
-		d = {"name":name}
+		d = {"name":name, "character":character}
 	msg = pickle.dumps(d)
 	s.send(msg)
 	try:
 		input = pickle.loads(s.recv(1024))
 	except EOFError:
-		d = {"name":name, "key":key}
+		d = {"name":name, "key":key, "character":character}
 		msg = pickle.dumps(d)
 		s.send(msg)
 		print("Waiting for input...")
@@ -255,7 +255,8 @@ def multyplayer():
 	print(input)
 	got = True
 	slot = input["slot"]
-	RPC.update(large_image="logo", state="Multyplayer",start = datetime.now().timestamp(),party_id=str(host),join=str(input["code"]), party_size=[input["players"], input["max_players"]])
+	if input["players"] > 0:
+		RPC.update(large_image="logo", state="Multyplayer",start = datetime.now().timestamp(),party_id=str(host),join=str(input["code"]), party_size=[input["players"], input["max_players"]])
 	count = 0
 	i2 = 0
 	i = 0
@@ -293,10 +294,14 @@ def multyplayer():
 		if input[index] != input["slot"]:
 			try:
 				pygame.draw.rect(pleace, input[index]["color"], pygame.Rect(input[index]["x"], input[index]["y"], 50, 50))
-				if win > 0:
-					pygame.draw.rect(pleace, (255, 153, 0), pygame.Rect(input[index]["x"] + 5, input[index]["y"] + 5, 40, 40))
-				pleace.blit(pygame.font.Font("arial.ttf", 25).render(index, True, (127.5, 127.5, 127.5)), (input[index]["x"], input[index]["y"] - 25))
-				pleace.blit(pygame.font.Font("arial.ttf", 35).render(str(input[index]["level"]), True, (100, 100, 100)), (input[index]["x"]+ 5, input[index]["y"]+5))
+				if input[index]["character"] == 0:pleace.blit(pygame.image.load("character1.png"),[input[index]["x"],input[index]["y"]])
+				elif input[index]["character"] == 1:pleace.blit(pygame.image.load("character2.png"),[input[index]["x"],input[index]["y"]])
+				elif input[index]["character"] == 2:pleace.blit(pygame.image.load("character3.png"),[input[index]["x"],input[index]["y"]])
+				if win == 1:
+					pygame.draw.rect(pleace, (255, 153, 0), pygame.Rect(input[index]["x"] + 5, input[index]["y"] + 5, 55, 55))
+					pleace.blit(pygame.font.Font("arial.ttf", 150).render(str(input[index]["name"]), True, (255, 0, 255)), (0, 400))
+				pleace.blit(pygame.font.Font("arial.ttf", 25).render(str(input[index]["name"]), True, (127.5, 127.5, 127.5)), (input[index]["x"], input[index]["y"] - 25))
+				pleace.blit(pygame.font.Font("arial.ttf", 35).render(str(input[index]["p-c"]), True, (100, 100, 100)), (input[index]["x"]+ 5, input[index]["y"]+5))
 			except:
 				pass
 		i += 1
@@ -350,7 +355,6 @@ def singleplayer():
 		if character == 0:pleace.blit(pygame.image.load("character1.png"),[px,py])
 		elif character == 1:pleace.blit(pygame.image.load("character2.png"),[px,py])
 		elif character == 2:pleace.blit(pygame.image.load("character3.png"),[px,py])
-		print(win)
 	#elif pcolor[0] > 1000:
 	#	pygame
 	pleace.blit(pygame.font.Font("arial.ttf", 25).render(name, True, (127.5, 127.5, 127.5)), (px, py - 25))
@@ -481,6 +485,8 @@ while playing:
 		lol = False
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
+				if connected:
+					s.close()
 				playing = False
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_F1:
@@ -519,11 +525,6 @@ while playing:
 		pleace.blit(pygame.font.Font("arial.ttf", 50).render(name , True, (255, 255, 255)), (0, 450))
 		pleace.blit(pygame.font.Font("arial.ttf", 50).render("Hostname:", True, (255, 255, 255)), (0, 540))
 		pleace.blit(pygame.font.Font("arial.ttf", 50).render(host , True, (255, 255, 255)), (0, 590))
-		music_setter = Button(700, 0, 800, 100, (127.5,0,127.5), "F4", 50, (255,255,255))
-		music_setter.show()
-		if music_setter.is_pressed(0):
-			set_music()
-			print("nice")
 		if lol: pleace.fill((0,0,0))
 	elif start == 3:
 		for event in pygame.event.get():
