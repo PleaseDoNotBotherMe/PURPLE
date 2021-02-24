@@ -37,7 +37,7 @@ def check():
 		s.connect((host, 1094))
 		connected = True
 		RPC.update(large_image="logo", large_text="PURPLE",
-				state="Multyplayer",
+				state="Multiplayer",
 				start = datetime.now().timestamp())
 	else:
 		RPC.update(large_image="logo", large_text="PURPLE",
@@ -228,7 +228,7 @@ def add_color(key):
 		win -= 1
 	else:
 		coloring()
-def multyplayer():
+def multiplayer():
 	global name
 	global px
 	global py
@@ -256,7 +256,7 @@ def multyplayer():
 	got = True
 	slot = input["slot"]
 	if input["players"] > 0:
-		RPC.update(large_image="logo", state="Multyplayer",start = datetime.now().timestamp(),party_id=str(host),join=str(input["code"]), party_size=[input["players"], input["max_players"]])
+		RPC.update(large_image="logo", state="Multiplayer",start = datetime.now().timestamp(),party_id=str(host),join=str(input["code"]), party_size=[input["players"], input["max_players"]])
 	count = 0
 	i2 = 0
 	i = 0
@@ -446,7 +446,7 @@ while playing:
 				elif event.key == pygame.K_F6:
 					pygame.mixer.music.stop()
 		if connected:
-			multyplayer()
+			multiplayer()
 		else:
 			if not render:
 				render = True
