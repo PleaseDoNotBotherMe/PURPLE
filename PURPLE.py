@@ -281,14 +281,6 @@ def multyplayer():
 		i2 += 1
 		i = 0
 		x = 0
-	#piros = pcolor[0]; zöld = pcolor[1]; kék = pcolor[2]
-	#print(pcolor)
-	red = pcolor[0]
-	green = pcolor[1]
-	blue = pcolor[2]
-	if red == blue and red < green and red > 50 and blue > 50 and red < 255 and blue < 255:
-		if win <= 0:
-			win = 15
 	i = 0
 	for index in input:
 		if input[index] != input["slot"]:
