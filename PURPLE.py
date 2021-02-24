@@ -178,9 +178,9 @@ def set_music():
 	if musica >= len(music_list): 
 		print("reset!")
 		musica = 0 
-	pygame.mixer.music.load(music_list[musica])
-	pygame.mixer.music.set_volume(volume)
-	pygame.mixer.music.play(10000)
+	#pygame.mixer.music.load(music_list[musica])
+	#pygame.mixer.music.set_volume(volume)
+	#pygame.mixer.music.play(10000)
 def coloring():
 	global pcolor
 	color = slot[pcount]
